@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.IO;
 
 #pragma warning disable IDE0063
 
@@ -154,7 +155,7 @@ namespace CIRCUS_MES_FA
                 .ToArray();
         }
 
-        public void ExportText(string filePath)
+        public void ExportText(string filePath, Encoding encoding)
         {
             var inst = GetStringInstructs();
 
@@ -164,7 +165,7 @@ namespace CIRCUS_MES_FA
                 return;
             }
 
-            var encoding = Encoding.GetEncoding("shift_jis");
+            //var encoding = Encoding.GetEncoding("gbk");
 
             // Create output text file
             using var writer = File.CreateText(filePath);

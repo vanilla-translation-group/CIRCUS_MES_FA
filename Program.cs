@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.IO;
 
 namespace CIRCUS_MES_FA
 {
@@ -14,8 +15,8 @@ namespace CIRCUS_MES_FA
                 Console.WriteLine("CIRCUS MES Tool");
                 Console.WriteLine("  -- Created by Crsky");
                 Console.WriteLine("Usage:");
-                Console.WriteLine("  Export text     : ScriptTool -e [file|folder]");
-                Console.WriteLine("  Rebuild script  : ScriptTool -b shift_jis [file|folder]");
+                Console.WriteLine("  Export text     : ScriptTool -e encoding [file|folder]");
+                Console.WriteLine("  Rebuild script  : ScriptTool -b encoding [file|folder]");
                 Console.WriteLine();
                 Console.WriteLine("Note:");
                 Console.WriteLine("  This tool works with old version of Circus engine.");
@@ -31,9 +32,16 @@ namespace CIRCUS_MES_FA
             {
                 case "-e":
                 {
-                    var path = Path.GetFullPath(args[1]);
+                    if (args.Length < 3)
+                    {
+                        Console.WriteLine("Not enough parameters.");
+                        return;
+                    }
 
-                    static void ExportText(string filePath)
+                    var encoding = Encoding.GetEncoding(args[1]);
+                    var path = Path.GetFullPath(args[2]);
+
+                    void ExportText(string filePath)
                     {
                         Console.WriteLine($"Exporting text from {Path.GetFileName(filePath)}");
 
@@ -41,7 +49,7 @@ namespace CIRCUS_MES_FA
                         {
                             var script = new Script();
                             script.Load(filePath);
-                            script.ExportText(Path.ChangeExtension(filePath, "txt"));
+                            script.ExportText(Path.ChangeExtension(filePath, "txt"), encoding);
                         }
                         catch (Exception e)
                         {
@@ -81,8 +89,7 @@ namespace CIRCUS_MES_FA
                         try
                         {
                             string textFilePath = Path.ChangeExtension(filePath, "txt");
-                            string newFilePath = Path.Combine(Path.GetDirectoryName(filePath), "rebuild", Path.GetFileName(filePath));
-                            Directory.CreateDirectory(Path.GetDirectoryName(newFilePath));
+                            string newFilePath = Path.ChangeExtension(filePath, "mea");
                             var script = new Script();
                             script.Load(filePath);
                             script.ImportText(textFilePath, encoding);

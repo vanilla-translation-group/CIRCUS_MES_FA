@@ -6,3 +6,6 @@ Tool for export & import text from CIRCUS's game
 
 + fortissimo FA // Akkord:nächsten Phase
 
+### Build
+
+`dotnet msbuild`
